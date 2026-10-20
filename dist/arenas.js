@@ -1,0 +1,32 @@
+/* Arena layouts share one playable footprint; scenery stays outside the combat lane. */
+(function(root){
+  'use strict';
+  const ARENAS={
+    canal:{name:'Canal market',subtitle:'Work the stalls. Reverse the water. Turn a wet edge into an opening.',accent:[.95,.70,.38],floor:[.39,.39,.33],grid:[.32,.34,.30],wall:[.46,.44,.36],
+      story:'An old riverside market became an improvised fighting yard. Shallow sluice channels run beside the dry trading lane; the wheel reverses their current.',
+      features:['Side channels wet fighters and extinguish nearby fire. Water utility can surf their surface.','The brass sluice wheel cycles forward, reverse and off. Currents move bodies and loose cargo; held pairs stay connected.','Wooden market tables and dividers break under impacts and can burn. Planters and barriers provide real cover.','The central trading lane stays clear for your combos. Use the side routes to work objects into a fight.'],
+      pillars:[[-5.45,-3.5],[5.45,3.6]],pads:[],bags:[],panels:[{x:2.9,z:4.65}],
+      channels:[{x:-4.3,z:0,hx:.65,hz:4.8,dx:0,dz:1,speed:3.0},{x:4.3,z:0,hx:.65,hz:4.8,dx:0,dz:-1,speed:3.0}],
+      props:[['table',-2.75,-3.8,0],['table',2.8,3.35,0],['chair',-2.6,-2.6,.3],['chair',2.8,2.1,Math.PI],['divider',-2.6,4.75,0],['divider',2.6,-4.7,0],['planter',-.7,-4.8,0],['planter',.6,4.8,0],['crate',-4.3,-1.7,.2],['barrel',4.3,1.6,0],['crate',-5.4,1.6,.1],['bench',5.5,-2.2,Math.PI/2],['tyre',-4.3,3.2,0]]},
+    street:{name:'Street yard',subtitle:'Take cover. Find an angle. Make your own opening.',accent:[.98,.64,.32],floor:[.245,.27,.28],grid:[.22,.24,.25],wall:[.38,.43,.43],
+      pillars:[[-5.4,3.8],[5.35,-4.3]],pads:[],bags:[],
+      props:[['car',-4,-1.25,0],['car',4.35,1.1,Math.PI],['barrier',-2.8,2.4,0],['barrier',.15,-4.65,0],['planter',2.9,-3.5,0],['planter',-3.9,4.7,0],['cone',-5,1.25,0],['cone',3.05,3.4,0],['crate',4.8,-2.8,.15],['barrel',-1.8,-4.8,0],['tyre',5,4.5,0]]},
+    courtyard:{name:'Courtyard',subtitle:'Stone, timber, and a little collateral.',accent:[.78,.87,.47],floor:[.31,.36,.29],grid:[.255,.305,.247],wall:[.38,.43,.34],
+      pillars:[[-3.9,-2.9],[4.55,1.5]],pads:[[-2.8,3.6],[2.2,-4.8]],bags:[[5,-2.55]],
+      props:[['table',2.8,-2.75,0],['chair',2.8,-1.35,Math.PI],['chair',-2.65,1.5,.65],['chair',3.75,3.25,-.6],['crate',-4.6,2.5,.1],['crate',4.6,-4.3,.2],['crate',-.4,4.6,-.2],['barrel',-4.9,-4,0],['barrel',4.9,4.5,0],['bench',-1.5,-4.8,0],['cone',-4.9,.3,0],['tyre',4.95,-.15,0],['divider',-4.45,4.5,0]]},
+    depot:{name:'Freight depot',subtitle:'Swing bags, scatter cargo, break a way through.',accent:[.94,.66,.32],floor:[.31,.335,.34],grid:[.255,.28,.29],wall:[.36,.40,.40],
+      pillars:[[-4.85,-2.5],[4.9,2.7]],pads:[[-4.65,2.85],[4.55,-4.65]],bags:[[-4.8,.2],[4.7,-1]],
+      props:[['table',2.8,-2.75,0],['chair',2.8,-1.35,Math.PI],['chair',-2.65,1.5,.65],['crate',-3.9,-4,.1],['crate',-4.9,-4.2,-.15],['crate',-3.2,4.6,.2],['barrel',4.7,4.5,0],['barrel',3.5,4.6,.15],['divider',-3.45,-1.5,Math.PI/2],['divider',3.9,.3,Math.PI/2],['tyre',-4.9,4.7,0],['tyre',-1,4.7,0],['cone',2.1,4.7,0],['cone',4.9,-3.3,0]]},
+    foundry:{name:'Foundry',subtitle:'Reverse the belts. Ride the vents. Turn cargo into a combo.',accent:[.96,.70,.29],floor:[.29,.32,.32],grid:[.22,.26,.27],wall:[.34,.39,.40],
+      pillars:[[-4.95,.65],[4.95,-3.65]],pads:[[-2.8,4.55],[2.7,-4.65]],bags:[[-4.9,2.2]],
+      belts:[{x:4.35,z:.2,hx:.65,hz:2.25,dx:0,dz:-1,speed:4.5},{x:-4.2,z:-.2,hx:.65,hz:1.65,dx:0,dz:1,speed:3.7}],
+      vents:[{x:-4.2,z:-3.1,hx:.85,hz:.95},{x:3.9,z:4.6,hx:.8,hz:.65}],panels:[{x:5.5,z:3.5},{x:-4.75,z:-4.6}],
+      props:[['cart',4.35,1.65,0],['cart',-4.2,-.7,0],['crate',4.35,.65,.08],['crate',-4.2,.7,-.12],['glass',3.4,-4.2,0],['glass',-3.2,2.65,Math.PI/2],['bumper',0,-5.1,0],['bumper',-5.45,-1.3,Math.PI/2],['table',2.8,-2.75,0],['chair',2.8,-1.35,Math.PI],['chair',-2.65,1.5,.65],['barrel',-4.7,4.7,0],['crate',.5,4.8,.2],['divider',3.3,4.9,0],['cone',-1.1,-4.9,0],['tyre',5,-1.5,0]]},
+    rooftop:{name:'Rooftop dojo',subtitle:'Open air, spring launches, and long elastic lines.',accent:[.55,.82,.83],floor:[.28,.345,.35],grid:[.23,.295,.30],wall:[.35,.43,.45],
+      pillars:[[-4.9,1.5],[4.95,-2.65]],pads:[[-3.55,-3.65],[2.8,3.65]],bags:[[4.9,1.8]],
+      props:[['table',2.8,-2.75,0],['chair',2.8,-1.35,Math.PI],['chair',-2.65,1.5,.65],['bench',-1.1,-4.85,0],['bench',-4.6,-.5,Math.PI/2],['crate',-4.8,4.65,.1],['crate',4.9,4.8,-.1],['barrel',-4.85,-4.8,0],['divider',3.8,-4.5,0],['cone',.4,4.8,0],['tyre',-2.9,4.7,0]]}
+  };
+  const STORIES={courtyard:['A neighbourhood training court, worn by years of footwork, practice throws and borrowed furniture.',['Trees and old buildings frame the court. The middle stays open for hand-to-hand practice.','Spring pads launch bodies and props. A hanging bag transfers real momentum.','Chairs can become weapons; tables and wooden dividers break under throws.']],depot:['After the last cargo shift, the loading yard becomes a place to experiment with weight and reach.',['Containers and a loading gantry frame the freight lanes.','Retrieve a loose crate or barrel, or send one into a hanging bag.','Dividers break; spring pads open long air chains.']],rooftop:['A quiet rooftop dojo above the evening city, with long sight lines and exposed training lanes.',['Distant windows, ventilation fans and rooftop rails define the skyline.','Spring pads and scenery anchors help you redirect an air chain.','Benches, crates and wooden dividers add close-range obstacles.']],foundry:['A converted steel workshop where the machinery remains part of every fight.',['Striped switch posts cycle conveyors forward, reverse and off.','Amber vent warnings precede a lifting air blast. Heavy bodies and cargo rise less.','Glass breaks; carts carry momentum; rebound pads create air follow-ups.']],street:['An enclosed service street behind shops and garages, with vehicle cover and loose workshop clutter.',['Car cabins and bodywork have separate solid collision. Peek around an edge to shoot.','Concrete barriers and planters stop real attacks; nearby furniture can break.','Use the alley objects for throws, stretching retrieval and elemental reactions.']]};
+  for(const [id,[story,features]]of Object.entries(STORIES))Object.assign(ARENAS[id],{story,features});
+  root.CombatArenas={ARENAS};if(typeof module!=='undefined'&&module.exports)module.exports={ARENAS};
+})(typeof window!=='undefined'?window:globalThis);

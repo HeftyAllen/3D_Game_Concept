@@ -1,0 +1,16 @@
+/* Boss HUD, retries and a browser-local best clear use actual simulation results. */
+(function(root){
+'use strict';
+class EncounterUI{
+ constructor(options){Object.assign(this,options);this.best=null;this.lastResult=null;try{const b=JSON.parse(localStorage.getItem('kinetic-rook-best-v1'));if(b&&Number.isFinite(b.seconds)&&b.seconds>=0)this.best=b;}catch{}document.getElementById('boss-difficulty').value=this.world.difficulty;
+ const start=()=>{if(this.world.run.active)return;this.guide.close();this.clearInputs();this.setPaused(false);this.awaken();this.world.difficulty=document.getElementById('boss-difficulty').value;this.world.boss.start();this.syncMode();this.lastResult=null;this.update();};document.getElementById('boss-start').addEventListener('click',start);document.getElementById('boss-retry').addEventListener('click',start);document.getElementById('boss-exit').addEventListener('click',()=>{this.clearInputs();this.world.setMode('practice');this.setPaused(false);this.syncMode();this.update();});this.update();}
+ update(){const w=this.world,b=w.boss,h=document.getElementById('boss-hud'),active=b.active;h.hidden=!active;document.getElementById('boss-start').disabled=w.run.active;document.getElementById('boss-entry-note').textContent=w.run.active?'Finish or leave the wave run before challenging Rook.':'Starting or rematching resets this round and travels to the Foundry.';
+ const best=document.getElementById('boss-best');best.textContent=this.best?'Best clear here: '+this.best.seconds+'s · '+this.best.difficulty+' · '+this.best.longest+' longest chain.':'No recorded clear on this browser yet.';
+ if(!active)return;document.getElementById('boss-phase-label').textContent='KILN WARDEN · PHASE '+b.stage+' / 3';document.getElementById('boss-title').textContent=b.phase==='results'?b.result.reason==='victory'?'Rook defeated.':'Rook holds the yard.':'Rook';document.getElementById('boss-health-fill').style.width=Math.max(0,w.enemy.health/w.enemy.maxHealth)*100+'%';const result=b.result;document.getElementById('boss-result-actions').hidden=b.phase!=='results';h.dataset.result=String(b.phase==='results');h.dataset.warning=String(!!b.tell);
+ document.getElementById('boss-tell-text').textContent=b.tell?b.tell.name+' · '+Math.max(0,b.tell.until-w.time).toFixed(1)+'s':b.phase==='results'?'ENCOUNTER COMPLETE':w.time<b.recoverUntil?'OPEN · COMBO NOW':'Read the wind-up';
+ document.getElementById('boss-advice').textContent=result?result.seconds+'s · '+result.longest+' longest chain · '+result.damageTaken+' damage taken · '+result.interrupts+' wind-ups interrupted':b.tell?b.tell.hint:w.time<b.recoverUntil?'Use this recovery window for a grab, launch or elemental chain.':'Interrupt a wind-up, jump the quake, dodge marked lanes. Solid cover blocks the flame fan.';
+ if(result&&this.lastResult!==result){this.lastResult=result;this.clearInputs();if(result.reason==='victory'&&(!this.best||result.seconds<this.best.seconds)){this.best={...result};try{localStorage.setItem('kinetic-rook-best-v1',JSON.stringify(this.best));}catch{}}}
+ }
+}
+root.CombatEncounterUI={EncounterUI};if(typeof module!=='undefined')module.exports=root.CombatEncounterUI;
+})(typeof window!=='undefined'?window:globalThis);
